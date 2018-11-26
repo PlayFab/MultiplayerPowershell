@@ -10,8 +10,6 @@
     [Cmdlet(VerbsCommon.Get, "PFTitleEntityToken")]
     public class GetPFTitleEntityToken : Cmdlet
     {
-        private static string entityToken { get; set; }
-
         private static DateTime TokenRefreshTime { get; set; }
 
         private const int TokenRefreshIntervalInHours = 12;

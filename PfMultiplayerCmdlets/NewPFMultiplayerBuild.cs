@@ -14,6 +14,7 @@
         [Parameter(Mandatory = true)]
         public string StartMultiplayerServerCommand { get; set; }
 
+        [Parameter]
         public Dictionary<string, string> Metadata { get; set; }
 
         [Parameter(Mandatory = true)]
