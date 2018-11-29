@@ -61,7 +61,7 @@ RequiredAssemblies = @("PFMultiplayerCmdlets.dll")
  FormatsToProcess = @('PlayFabMultiplayer.ps1xml')
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @('.\PlayFabMultiplayer.psm1')
+NestedModules = @('.\PFMultiplayerCmdlets.dll')
 
 # Functions to export from this module
 FunctionsToExport = '*'
