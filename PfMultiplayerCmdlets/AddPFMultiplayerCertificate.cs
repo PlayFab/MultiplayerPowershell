@@ -15,6 +15,7 @@
         [Parameter(Mandatory = true)]
         public string Name { get; set; }
 
+        [Parameter]
         public string Password { get; set; }
 
         protected override void ProcessRecord()
