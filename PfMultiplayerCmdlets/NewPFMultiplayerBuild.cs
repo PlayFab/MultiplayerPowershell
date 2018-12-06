@@ -35,6 +35,9 @@
         [ValidateNotNullOrEmpty]
         public List<AssetReferenceParams> AssetReferences { get; set; }
 
+        [Parameter]
+        public List<GameCertificateReferenceParams> CertificateReferences { get; set; }
+
         protected override void ProcessRecord()
         {
             CreateBuildWithManagedContainerRequest buildRequest = new CreateBuildWithManagedContainerRequest()
@@ -42,6 +45,7 @@
                 BuildName = BuildName,
                 ContainerFlavor = ContainerFlavor.ManagedWindowsServerCore,
                 GameAssetReferences = AssetReferences,
+                GameCertificateReferences = CertificateReferences,
                 Metadata = Metadata,
                 Ports = Ports,
                 MultiplayerServerCountPerVm = MultiplayerServerCountPerVm,
