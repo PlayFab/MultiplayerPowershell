@@ -1,8 +1,10 @@
 ﻿namespace PFMultiplayerCmdlets
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Management.Automation;
+    using System.Threading.Tasks;
     using Microsoft.WindowsAzure.Storage.Blob;
     using Microsoft.WindowsAzure.Storage.RetryPolicies;
     using PlayFab;
@@ -12,7 +14,15 @@
     public class AddPFMultiplayerAsset : PFBaseCmdlet
     {
         [Parameter(Mandatory = true)]
+        [ValidatePattern(".*\\.zip")]
         public string FilePath { get; set; }
+
+        [Parameter]
+        [ValidatePattern(".*\\.zip")]
+        public string AssetName { get; set; }
+
+        [Parameter]
+        public IDictionary<string, string> Metadata { get; set; }
 
         protected override void ProcessRecord()
         {
@@ -22,12 +32,23 @@
                     null));
             }
 
-            var response = PlayFabMultiplayerAPI
-                .GetAssetUploadUrlAsync(new GetAssetUploadUrlRequest {FileName = Path.GetFileName(FilePath)}).Result.Result;
-            WriteObject("SasToken retrieved, uploading file.");
+            GetAssetUploadUrlResponse response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+                .GetAssetUploadUrlAsync(new GetAssetUploadUrlRequest {FileName = AssetName ?? Path.GetFileName(FilePath)})).Result.Result;
+
+            WriteVerbose($"SasToken retrieved {response.AssetUploadUrl}, uploading file.");
             var blob = new CloudBlockBlob(new Uri(response.AssetUploadUrl));
+            if (Metadata?.Count > 0)
+            {
+                foreach (KeyValuePair<string, string> kvPair in Metadata)
+                {
+                    blob.Metadata.Add(kvPair);
+                }
+
+                blob.SetMetadata();
+            }
+
             blob.UploadFromFile(FilePath, null, new BlobRequestOptions {RetryPolicy = new ExponentialRetry()});
-            WriteObject($"Completed adding asset {FilePath}.");
+            WriteVerbose($"Completed adding asset {FilePath}.");
         }
     }
 }

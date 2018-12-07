@@ -24,12 +24,12 @@
                 status = GetStatus();
             }
 
-            WriteObject("Title is enabled for multiplayer servers.");
+            WriteVerbose("Title is enabled for multiplayer servers.");
         }
 
         private TitleMultiplayerServerEnabledStatus GetStatus()
         {
-            return PlayFabMultiplayerAPI.GetTitleEnabledForMultiplayerServersStatusAsync(new GetTitleEnabledForMultiplayerServersStatusRequest())
+            return CallPlayFabApi( () => PlayFabMultiplayerAPI.GetTitleEnabledForMultiplayerServersStatusAsync(new GetTitleEnabledForMultiplayerServersStatusRequest()))
                 .Result.Result.Status.Value;
         }
     }

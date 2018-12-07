@@ -66,20 +66,20 @@
         private List<MultiplayerServerSummary> GetMultiplayerServers(string buildId, AzureRegion region)
         {
             List<MultiplayerServerSummary> summaries = new List<MultiplayerServerSummary>();
-            ListMultiplayerServersResponse response = PlayFabMultiplayerAPI
-                .ListMultiplayerServersAsync(new ListMultiplayerServersRequest() {PageSize = DefaultPageSize, Region = region, BuildId = buildId}).Result.Result;
+            ListMultiplayerServersResponse response = CallPlayFabApi(() =>PlayFabMultiplayerAPI
+                .ListMultiplayerServersAsync(new ListMultiplayerServersRequest() {PageSize = DefaultPageSize, Region = region, BuildId = buildId})).Result.Result;
             summaries.AddRange(response.MultiplayerServerSummaries ?? Enumerable.Empty<MultiplayerServerSummary>());
             if (All)
             {
                 while (!string.IsNullOrEmpty(response.SkipToken))
                 {
-                    response = PlayFabMultiplayerAPI
+                    response = CallPlayFabApi(() => PlayFabMultiplayerAPI
                         .ListMultiplayerServersAsync(new ListMultiplayerServersRequest()
                         {
                             PageSize = DefaultPageSize,
                             SkipToken = response.SkipToken,
                             Region = region
-                        }).Result.Result;
+                        })).Result.Result;
                     summaries.AddRange(response.MultiplayerServerSummaries ?? Enumerable.Empty<MultiplayerServerSummary>());
                 }
             }

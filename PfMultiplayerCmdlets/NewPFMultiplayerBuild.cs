@@ -6,6 +6,7 @@
     using PlayFab.MultiplayerModels;
 
     [Cmdlet(VerbsCommon.New, "PFMultiplayerBuild")]
+    [OutputType(typeof(CreateBuildWithManagedContainerResponse))]
     public class NewPFMultiplayerBuild : PFBaseCmdlet
     {
         [Parameter(Mandatory = true)]
@@ -54,9 +55,9 @@
                 RegionConfigurations = RegionConfiguration
             };
 
-            PlayFabMultiplayerAPI.CreateBuildWithManagedContainerAsync(buildRequest).Wait();
-
-            WriteObject($"Created build {BuildName}");
+            CreateBuildWithManagedContainerResponse response = CallPlayFabApi(() => PlayFabMultiplayerAPI.CreateBuildWithManagedContainerAsync(buildRequest)).Result.Result;
+            WriteVerbose($"Created build {BuildName}");
+            WriteObject(response);
         }
     }
 }

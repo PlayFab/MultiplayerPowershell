@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PFMultiplayerCmdlets
+﻿namespace PFMultiplayerCmdlets
 {
     using System.Management.Automation;
     using PlayFab;
@@ -18,8 +12,8 @@ namespace PFMultiplayerCmdlets
 
         protected override void ProcessRecord()
         {
-            PlayFabMultiplayerAPI.DeleteCertificateAsync(new DeleteCertificateRequest() { Name = Name }).Wait();
-            WriteObject($"Completed removing certificate {Name}.");
+            CallPlayFabApi(() => PlayFabMultiplayerAPI.DeleteCertificateAsync(new DeleteCertificateRequest {Name = Name})).Wait();
+            WriteVerbose($"Completed removing certificate {Name}.");
         }
     }
 }

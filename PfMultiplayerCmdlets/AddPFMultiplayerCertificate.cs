@@ -29,13 +29,13 @@
             var certBytes = File.ReadAllBytes(FilePath);
             var certBase64 = Convert.ToBase64String(certBytes);
 
-            PlayFabMultiplayerAPI
+            CallPlayFabApi(() => PlayFabMultiplayerAPI
                 .UploadCertificateAsync(new UploadCertificateRequest
                 {
                     GameCertificate = new Certificate {Base64EncodedValue = certBase64, Name = Name, Password = Password}
-                }).Wait();
+                })).Wait();
 
-            WriteObject("$Completed uploading certificate {FilePath}.");
+            WriteVerbose("$Completed uploading certificate {FilePath}.");
         }
     }
 }

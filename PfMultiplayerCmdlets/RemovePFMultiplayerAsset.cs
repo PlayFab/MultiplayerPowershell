@@ -12,8 +12,8 @@
 
         protected override void ProcessRecord()
         {
-            PlayFabMultiplayerAPI.DeleteAssetAsync(new DeleteAssetRequest() {FileName = FileName}).Wait();
-            WriteObject($"Completed removing asset {FileName}.");
+            CallPlayFabApi(() => PlayFabMultiplayerAPI.DeleteAssetAsync(new DeleteAssetRequest() {FileName = FileName})).Wait();
+            WriteVerbose($"Completed removing asset {FileName}.");
         }
     }
 }

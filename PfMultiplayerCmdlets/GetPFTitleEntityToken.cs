@@ -37,7 +37,7 @@
                 // The SDK sets the entity token as part of response evaluation.
                 PlayFabAuthenticationAPI.GetEntityTokenAsync(request).Wait();
                 TokenRefreshTime = DateTime.UtcNow.AddHours(TokenRefreshIntervalInHours);
-                WriteObject("Entity token retrieved.");
+                WriteVerbose("Entity token retrieved.");
             }
         }
     }

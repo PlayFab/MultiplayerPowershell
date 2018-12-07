@@ -31,14 +31,25 @@
             }
 
             List<BuildSummary> buildSummaries = GetBuildSummaries(All);
+            bool specificBuildRequested = false;
             if (!string.IsNullOrEmpty(BuildName))
             {
                 buildSummaries = buildSummaries.Where(x => x.BuildName.IndexOf(BuildName, StringComparison.OrdinalIgnoreCase) > -1).ToList();
+                specificBuildRequested = true;
             }
             else if (BuildId.HasValue)
             {
                 // This list will have only one value, It is retained as a list for convenience and consistent behavior.
                 buildSummaries = buildSummaries.Where(x => string.Equals(x.BuildId, BuildId.Value.ToString(), StringComparison.OrdinalIgnoreCase)).ToList();
+                specificBuildRequested = true;
+            }
+
+            if (specificBuildRequested && buildSummaries.Count == 0)
+            {
+                ThrowTerminatingError(
+                    new ErrorRecord(new Exception("Build not found."), 
+                        "ObjectNotFound",
+                        ErrorCategory.ObjectNotFound, null));
             }
 
             if (Detailed)
@@ -67,7 +78,7 @@
 
         private GetBuildResponse GetBuildDetails(string buildId)
         {
-            return PlayFabMultiplayerAPI.GetBuildAsync(new GetBuildRequest() {BuildId = buildId}).Result.Result;
+            return CallPlayFabApi(() => PlayFabMultiplayerAPI.GetBuildAsync(new GetBuildRequest() {BuildId = buildId})).Result.Result;
         }
 
         internal static List<BuildSummary> GetBuildSummaries(bool all)

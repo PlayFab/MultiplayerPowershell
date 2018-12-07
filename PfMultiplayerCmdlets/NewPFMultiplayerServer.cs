@@ -56,13 +56,13 @@
         {
             string buildIdString = GetBuildId(this, BuildName, BuildId);
 
-            RequestMultiplayerServerResponse response = PlayFabMultiplayerAPI.RequestMultiplayerServerAsync(new RequestMultiplayerServerRequest()
+            RequestMultiplayerServerResponse response = CallPlayFabApi(() =>PlayFabMultiplayerAPI.RequestMultiplayerServerAsync(new RequestMultiplayerServerRequest()
             {
                 BuildId = buildIdString,
                 PreferredRegions = PreferredRegions,
                 SessionCookie = SessionCookie,
                 SessionId = SessionId.ToString()
-            }).Result.Result;
+            })).Result.Result;
 
             WriteObject(response);
         }
