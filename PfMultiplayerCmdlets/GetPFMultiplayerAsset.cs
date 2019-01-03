@@ -21,7 +21,7 @@
                 while (!string.IsNullOrEmpty(response.SkipToken))
                 {
                     response = CallPlayFabApi(() => PlayFabMultiplayerAPI
-                        .ListAssetSummariesAsync(new ListAssetSummariesRequest() {PageSize = DefaultPageSize, SkipToken = response.SkipToken})).Result.Result;
+                        .ListAssetSummariesAsync(new ListAssetSummariesRequest() {PageSize = DefaultPageSize, SkipToken = response.SkipToken}));
                     summaries.AddRange(response.AssetSummaries ?? Enumerable.Empty<AssetSummary>());
                 }
             }

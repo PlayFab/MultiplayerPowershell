@@ -27,21 +27,15 @@
         {
             if (Regions?.Count > 0 && AllRegions)
             {
-                ThrowTerminatingError(
-                    new ErrorRecord(new ArgumentException("Exactly one of Regions, AllRegions should be specified."),
-                        "InvalidArgument",
-                        ErrorCategory.InvalidArgument, null));
+                throw new ArgumentException("Exactly one of Regions, AllRegions should be specified.");
             }
 
             if ((Regions == null || Regions.Count == 0) && !AllRegions)
             {
-                ThrowTerminatingError(
-                    new ErrorRecord(new ArgumentException("Exactly one of Regions, AllRegions should be specified."),
-                        "InvalidArgument",
-                        ErrorCategory.InvalidArgument, null));
+                throw new ArgumentException("Exactly one of Regions, AllRegions should be specified.");
             }
 
-            string buildIdString = NewPFMultiplayerServer.GetBuildId(this, BuildName, BuildId);
+            string buildIdString = NewPFMultiplayerServer.GetBuildId(BuildName, BuildId);
 
             HashSet<AzureRegion> regionsList = new HashSet<AzureRegion>();
             if (AllRegions)
@@ -67,7 +61,7 @@
         {
             List<MultiplayerServerSummary> summaries = new List<MultiplayerServerSummary>();
             ListMultiplayerServersResponse response = CallPlayFabApi(() =>PlayFabMultiplayerAPI
-                .ListMultiplayerServersAsync(new ListMultiplayerServersRequest() {PageSize = DefaultPageSize, Region = region, BuildId = buildId})).Result.Result;
+                .ListMultiplayerServersAsync(new ListMultiplayerServersRequest() {PageSize = DefaultPageSize, Region = region, BuildId = buildId}));
             summaries.AddRange(response.MultiplayerServerSummaries ?? Enumerable.Empty<MultiplayerServerSummary>());
             if (All)
             {
@@ -79,7 +73,7 @@
                             PageSize = DefaultPageSize,
                             SkipToken = response.SkipToken,
                             Region = region
-                        })).Result.Result;
+                        }));
                     summaries.AddRange(response.MultiplayerServerSummaries ?? Enumerable.Empty<MultiplayerServerSummary>());
                 }
             }

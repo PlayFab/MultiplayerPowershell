@@ -24,10 +24,7 @@
         {
             if (Convert.ToInt32(!string.IsNullOrEmpty(BuildName)) + Convert.ToInt32(BuildId.HasValue) + Convert.ToInt32(All) > 1)
             {
-                ThrowTerminatingError(
-                    new ErrorRecord(new ArgumentException("Exactly one of BuildName, BuildId, All should be specified."),
-                    "InvalidArgument",
-                    ErrorCategory.InvalidArgument, null));
+                throw new ArgumentException("Exactly one of 'BuildName', 'BuildId', 'All' should be specified.");
             }
 
             List<BuildSummary> buildSummaries = GetBuildSummaries(All);
@@ -46,10 +43,7 @@
 
             if (specificBuildRequested && buildSummaries.Count == 0)
             {
-                ThrowTerminatingError(
-                    new ErrorRecord(new Exception("Build not found."), 
-                        "ObjectNotFound",
-                        ErrorCategory.ObjectNotFound, null));
+                throw new Exception("Build not found.");
             }
 
             if (Detailed)
@@ -78,21 +72,21 @@
 
         private GetBuildResponse GetBuildDetails(string buildId)
         {
-            return CallPlayFabApi(() => PlayFabMultiplayerAPI.GetBuildAsync(new GetBuildRequest() {BuildId = buildId})).Result.Result;
+            return CallPlayFabApi(() => PlayFabMultiplayerAPI.GetBuildAsync(new GetBuildRequest() {BuildId = buildId}));
         }
 
         internal static List<BuildSummary> GetBuildSummaries(bool all)
         {
             List<BuildSummary> summaries = new List<BuildSummary>();
-            ListBuildSummariesResponse response = PlayFabMultiplayerAPI
-                .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize }).Result.Result;
+            ListBuildSummariesResponse response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+                .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize }));
             summaries.AddRange(response.BuildSummaries ?? Enumerable.Empty<BuildSummary>());
             if (all)
             {
                 while (!string.IsNullOrEmpty(response.SkipToken))
                 {
-                    response = PlayFabMultiplayerAPI
-                        .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize, SkipToken = response.SkipToken }).Result.Result;
+                    response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+                        .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize, SkipToken = response.SkipToken }));
                     summaries.AddRange(response.BuildSummaries ?? Enumerable.Empty<BuildSummary>());
                 }
             }

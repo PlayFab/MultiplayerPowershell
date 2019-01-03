@@ -22,8 +22,7 @@
         {
             if (!File.Exists(FilePath))
             {
-                ThrowTerminatingError(new ErrorRecord(new Exception($"File {FilePath} does not exist"), "FileDoesNotExist", ErrorCategory.ObjectNotFound,
-                    null));
+                throw new Exception($"File {FilePath} does not exist");
             }
 
             var certBytes = File.ReadAllBytes(FilePath);
@@ -33,7 +32,7 @@
                 .UploadCertificateAsync(new UploadCertificateRequest
                 {
                     GameCertificate = new Certificate {Base64EncodedValue = certBase64, Name = Name, Password = Password}
-                })).Wait();
+                }));
 
             WriteVerbose("$Completed uploading certificate {FilePath}.");
         }

@@ -13,21 +13,21 @@
         {
             if (string.IsNullOrEmpty(PlayFabSettings.TitleId))
             {
-                ThrowTerminatingError(new ErrorRecord(new Exception("Run Get-PFTitleEntityToken before running any cmdlet."), "EntityTokenMissing",
-                    ErrorCategory.AuthenticationError, null));
+                throw new Exception("Run Get-PFTitleEntityToken before running any cmdlet.");
             }
         }
 
-        protected async Task<PlayFabResult<T>>CallPlayFabApi<T>(Func<Task<PlayFabResult<T>>> apiCall) where T: PlayFabResultCommon
+        protected static T CallPlayFabApi<T>(Func<Task<PlayFabResult<T>>> apiCall) where T: PlayFabResultCommon
         {
-            PlayFabResult<T> result = await apiCall();
+            // BeginProcessing verifies that TitleId is set (and Get-PFTitleEntityToken has been run before).
+            new GetPFTitleEntityToken() {TitleId = PlayFabSettings.TitleId, SecretKey = PlayFabSettings.DeveloperSecretKey}.Invoke();
+            PlayFabResult<T> result = apiCall().Result;
             if (result.Error != null)
             {
-                ThrowTerminatingError(new ErrorRecord(new Exception($"Error occurred while calling the api. {JsonConvert.SerializeObject(result.Error)}."),
-                    "APIError", ErrorCategory.InvalidResult, null));
+                throw new Exception($"Error occurred while calling the api. {JsonConvert.SerializeObject(result.Error)}.");
             }
 
-            return result;
+            return result.Result;
         }
     }
 }

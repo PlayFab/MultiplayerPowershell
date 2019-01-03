@@ -12,7 +12,7 @@
 
         protected override void ProcessRecord()
         {
-            CallPlayFabApi(() => PlayFabMultiplayerAPI.DeleteCertificateAsync(new DeleteCertificateRequest {Name = Name})).Wait();
+            CallPlayFabApi(() => PlayFabMultiplayerAPI.DeleteCertificateAsync(new DeleteCertificateRequest {Name = Name}));
             WriteVerbose($"Completed removing certificate {Name}.");
         }
     }

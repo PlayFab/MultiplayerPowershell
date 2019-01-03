@@ -13,8 +13,8 @@
 
         protected override void ProcessRecord()
         {
-            CallPlayFabApi(() => PlayFabMultiplayerAPI.DeleteBuildAsync(new DeleteBuildRequest() {BuildId = BuildId.Value.ToString()})).Wait();
-            WriteVerbose($"Deleted build {BuildId.Value}");
+            CallPlayFabApi(() => PlayFabMultiplayerAPI.DeleteBuildAsync(new DeleteBuildRequest() {BuildId = BuildId.Value.ToString()}));
+            WriteVerbose($"Build {BuildId.Value} is marked for deletion.");
         }
     }
 }

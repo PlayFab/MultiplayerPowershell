@@ -40,5 +40,10 @@
                 WriteVerbose("Entity token retrieved.");
             }
         }
+
+        internal static void RefreshToken()
+        {
+            
+        }
     }
 }

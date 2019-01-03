@@ -28,12 +28,11 @@
         {
             if (!File.Exists(FilePath))
             {
-                ThrowTerminatingError(new ErrorRecord(new Exception($"File {FilePath} does not exist"), "FileDoesNotExist", ErrorCategory.ObjectNotFound,
-                    null));
+                throw new Exception($"File {FilePath} does not exist");
             }
 
             GetAssetUploadUrlResponse response = CallPlayFabApi(() => PlayFabMultiplayerAPI
-                .GetAssetUploadUrlAsync(new GetAssetUploadUrlRequest {FileName = AssetName ?? Path.GetFileName(FilePath)})).Result.Result;
+                .GetAssetUploadUrlAsync(new GetAssetUploadUrlRequest {FileName = AssetName ?? Path.GetFileName(FilePath)}));
 
             WriteVerbose($"SasToken retrieved {response.AssetUploadUrl}, uploading file.");
             var blob = new CloudBlockBlob(new Uri(response.AssetUploadUrl));

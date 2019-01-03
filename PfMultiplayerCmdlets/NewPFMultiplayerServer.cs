@@ -26,9 +26,9 @@
         [ValidateNotNullOrEmpty]
         public List<AzureRegion> PreferredRegions { get; set; }
 
-        internal static string GetBuildId(Cmdlet cmdlet, string buildName, Guid? buildId)
+        internal static string GetBuildId(string buildName, Guid? buildId)
         {
-            ValidateBuildArguments(cmdlet, buildName, buildId);
+            ValidateBuildArguments(buildName, buildId);
             if (!string.IsNullOrEmpty(buildName))
             {
                 List<BuildSummary> buildSummaries = GetPFMultiplayerBuild.GetBuildSummaries(all: true);
@@ -36,12 +36,12 @@
 
                 if (buildSummaries.Count == 0)
                 {
-                    cmdlet.ThrowTerminatingError(new ErrorRecord(new Exception($"Build {buildName} not found."), "BuildNotFound", ErrorCategory.InvalidArgument, null));
+                    throw new Exception($"Build {buildName} not found.");
                 }
 
                 if (buildSummaries.Count > 1)
                 {
-                    cmdlet.ThrowTerminatingError(new ErrorRecord(new Exception($"More than one build matched {buildName}."), "MultipleBuildsFound", ErrorCategory.InvalidArgument, null));
+                    throw new Exception($"More than one build matched {buildName}.");
                 }
 
                 return buildSummaries[0].BuildId;
@@ -54,7 +54,7 @@
 
         protected override void ProcessRecord()
         {
-            string buildIdString = GetBuildId(this, BuildName, BuildId);
+            string buildIdString = GetBuildId(BuildName, BuildId);
 
             RequestMultiplayerServerResponse response = CallPlayFabApi(() =>PlayFabMultiplayerAPI.RequestMultiplayerServerAsync(new RequestMultiplayerServerRequest()
             {
@@ -62,27 +62,21 @@
                 PreferredRegions = PreferredRegions,
                 SessionCookie = SessionCookie,
                 SessionId = SessionId.ToString()
-            })).Result.Result;
+            }));
 
             WriteObject(response);
         }
 
-        internal static void ValidateBuildArguments(Cmdlet cmdlet, string buildName, Guid? buildId)
+        internal static void ValidateBuildArguments(string buildName, Guid? buildId)
         {
             if (!string.IsNullOrEmpty(buildName) && buildId.HasValue)
             {
-                cmdlet.ThrowTerminatingError(
-                    new ErrorRecord(new ArgumentException("Exactly one of BuildName, BuildId should be specified."),
-                        "InvalidArgument",
-                        ErrorCategory.InvalidArgument, null));
+                throw new ArgumentException("Exactly one of BuildName, BuildId should be specified.");
             }
 
             if (string.IsNullOrEmpty(buildName) && !buildId.HasValue)
             {
-               cmdlet. ThrowTerminatingError(
-                    new ErrorRecord(new ArgumentException("Exactly one of BuildName, BuildId should be specified."),
-                        "InvalidArgument",
-                        ErrorCategory.InvalidArgument, null));
+                throw new ArgumentException("Exactly one of BuildName, BuildId should be specified.");
             }
         }
     }

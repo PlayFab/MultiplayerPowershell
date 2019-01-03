@@ -30,7 +30,7 @@
         private TitleMultiplayerServerEnabledStatus GetStatus()
         {
             return CallPlayFabApi( () => PlayFabMultiplayerAPI.GetTitleEnabledForMultiplayerServersStatusAsync(new GetTitleEnabledForMultiplayerServersStatusRequest()))
-                .Result.Result.Status.Value;
+                .Status.Value;
         }
     }
 }
