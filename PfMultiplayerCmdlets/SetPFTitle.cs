@@ -1,11 +1,9 @@
 ﻿namespace PFMultiplayerCmdlets
 {
-    using System;
     using System.Management.Automation;
 
-    [Cmdlet(VerbsCommon.Get, "PFTitleEntityToken")]
-    [Obsolete(@"This cmdlet is deprecated. Use Set-PFTitle instead.")]
-    public class GetPFTitleEntityToken : Cmdlet
+    [Cmdlet(VerbsCommon.Set, "PFTitle")]
+    public class SetPFTitle : Cmdlet
     {
         [Parameter(Mandatory = true)]
         public string SecretKey { get; set; }
