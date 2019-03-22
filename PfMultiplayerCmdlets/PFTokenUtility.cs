@@ -31,9 +31,13 @@
 
                 // Using reflection here since the property has an internal setter. Clearing it is essential, to force,
                 // the SDK to use the secret key (and not send a potentially expired token).
-                FieldInfo fieldInfo = typeof(PlayFabSettings).GetField("EntityToken", BindingFlags.Static | BindingFlags.NonPublic);
-                fieldInfo.SetValue(null, null);
-
+                FieldInfo fieldInfo = typeof(PlayFabSettings).GetField("staticPlayer", BindingFlags.Static | BindingFlags.NonPublic);
+                
+                PlayFabAuthenticationContext context = (PlayFabAuthenticationContext)fieldInfo.GetValue(null);
+                
+                fieldInfo = typeof(PlayFabAuthenticationContext).GetField("EntityToken", BindingFlags.Instance | BindingFlags.Public);
+                fieldInfo.SetValue(context, null);
+                
                 PlayFabSettings.TitleId = TitleId;
                 PlayFabSettings.DeveloperSecretKey = _secretKey;
 
