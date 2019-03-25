@@ -30,7 +30,8 @@
                 GetEntityTokenRequest request = new GetEntityTokenRequest();
 
                 // Using reflection here since the property has an internal setter. Clearing it is essential, to force,
-                // the SDK to use the secret key (and not send a potentially expired token).
+                // the SDK to use the secret key (and not send a potentially expired token). If the SDK behavior changes to use the secret key (if available),
+                // then all this code can be removed
                 FieldInfo fieldInfo = typeof(PlayFabSettings).GetField("staticPlayer", BindingFlags.Static | BindingFlags.NonPublic);
                 
                 PlayFabAuthenticationContext context = (PlayFabAuthenticationContext)fieldInfo.GetValue(null);
