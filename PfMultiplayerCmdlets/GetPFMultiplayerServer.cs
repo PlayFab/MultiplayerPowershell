@@ -70,6 +70,7 @@
                     response = CallPlayFabApi(() => PlayFabMultiplayerAPI
                         .ListMultiplayerServersAsync(new ListMultiplayerServersRequest()
                         {
+                            BuildId = buildId,
                             PageSize = DefaultPageSize,
                             SkipToken = response.SkipToken,
                             Region = region
