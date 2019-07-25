@@ -14,11 +14,11 @@
     public class AddPFMultiplayerAsset : PFBaseCmdlet
     {
         [Parameter(Mandatory = true)]
-        [ValidatePattern(".*\\.zip")]
+        [ValidatePattern(".*\\.(zip|tar\\.gz)")]
         public string FilePath { get; set; }
 
         [Parameter]
-        [ValidatePattern(".*\\.zip")]
+        [ValidatePattern(".*\\.(zip|tar\\.gz)")]
         public string AssetName { get; set; }
 
         [Parameter]
