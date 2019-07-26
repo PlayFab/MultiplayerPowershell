@@ -26,12 +26,8 @@
 
         protected override void ProcessRecord()
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
-            SessionState ss = new SessionState();
-            Directory.SetCurrentDirectory(ss.Path.CurrentFileSystemLocation.Path);
-            FilePath = Path.GetFullPath(FilePath);
-            Directory.SetCurrentDirectory(currentDirectory);
-            
+            FilePath = Path.IsPathRooted(FilePath) ? FilePath : Path.Combine(this.SessionState.Path.CurrentFileSystemLocation.Path, FilePath);
+
             if (!File.Exists(FilePath))
             {
                 throw new Exception($"File {FilePath} does not exist");

@@ -7,7 +7,7 @@
     using PlayFab;
     using PlayFab.Internal;
 
-    public class PFBaseCmdlet : Cmdlet
+    public class PFBaseCmdlet : PSCmdlet
     {
         protected override void BeginProcessing()
         {
