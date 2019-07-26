@@ -26,6 +26,8 @@
 
         protected override void ProcessRecord()
         {
+            //cd in powershell does not set the Path.CurrentDirectory to the specified path. 
+            //Therefore, to resolve relative paths we need to find the current file system location (which gets updated by cd) and combine it with the relative path
             FilePath = Path.IsPathRooted(FilePath) ? FilePath : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, FilePath);
 
             if (!File.Exists(FilePath))
