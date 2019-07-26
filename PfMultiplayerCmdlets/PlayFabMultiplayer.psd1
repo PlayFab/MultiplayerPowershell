@@ -12,7 +12,7 @@
  RootModule = 'PFMultiplayerCmdlets.dll'
 
 # Version number of this module.
-ModuleVersion = '0.929'
+ModuleVersion = '0.930'
 
 # ID used to uniquely identify this module
 GUID = '4983f215-13a8-4e0a-a26c-82278df23074'
