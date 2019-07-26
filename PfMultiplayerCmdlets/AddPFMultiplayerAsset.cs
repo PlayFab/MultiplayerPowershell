@@ -26,7 +26,7 @@
 
         protected override void ProcessRecord()
         {
-            FilePath = Path.IsPathRooted(FilePath) ? FilePath : Path.Combine(this.SessionState.Path.CurrentFileSystemLocation.Path, FilePath);
+            FilePath = Path.IsPathRooted(FilePath) ? FilePath : Path.Combine(SessionState.Path.CurrentFileSystemLocation.Path, FilePath);
 
             if (!File.Exists(FilePath))
             {
