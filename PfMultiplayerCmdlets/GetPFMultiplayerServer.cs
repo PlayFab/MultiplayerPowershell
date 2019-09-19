@@ -35,12 +35,12 @@
                 throw new ArgumentException("Exactly one of Regions, AllRegions should be specified.");
             }
 
-            string buildIdString = NewPFMultiplayerServer.GetBuildId(BuildName, BuildId);
+            string buildIdString = new NewPFMultiplayerServer { ProductionEnvironmentUrl = ProductionEnvironmentUrl }.GetBuildId(BuildName, BuildId);
 
             HashSet<AzureRegion> regionsList = new HashSet<AzureRegion>();
             if (AllRegions)
             {
-                GetBuildResponse response = PlayFabMultiplayerAPI.GetBuildAsync(new GetBuildRequest() {BuildId = buildIdString}).Result.Result;
+                GetBuildResponse response = Instance.GetBuildAsync(new GetBuildRequest() { BuildId = buildIdString }).Result.Result;
                 response.RegionConfigurations.ForEach(x => regionsList.Add(x.Region.Value));
             }
             else
@@ -53,21 +53,21 @@
             {
                 serverSummaries.AddRange(GetMultiplayerServers(buildIdString, region));
             }
-            
+
             WriteObject(serverSummaries);
         }
 
         private List<MultiplayerServerSummary> GetMultiplayerServers(string buildId, AzureRegion region)
         {
             List<MultiplayerServerSummary> summaries = new List<MultiplayerServerSummary>();
-            ListMultiplayerServersResponse response = CallPlayFabApi(() =>PlayFabMultiplayerAPI
-                .ListMultiplayerServersAsync(new ListMultiplayerServersRequest() {PageSize = DefaultPageSize, Region = region, BuildId = buildId}));
+            ListMultiplayerServersResponse response = CallPlayFabApi(() => Instance
+                .ListMultiplayerServersAsync(new ListMultiplayerServersRequest() { PageSize = DefaultPageSize, Region = region, BuildId = buildId }));
             summaries.AddRange(response.MultiplayerServerSummaries ?? Enumerable.Empty<MultiplayerServerSummary>());
             if (All)
             {
                 while (!string.IsNullOrEmpty(response.SkipToken))
                 {
-                    response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+                    response = CallPlayFabApi(() => Instance
                         .ListMultiplayerServersAsync(new ListMultiplayerServersRequest()
                         {
                             BuildId = buildId,

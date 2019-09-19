@@ -13,14 +13,14 @@
         protected override void ProcessRecord()
         {
             List<AssetSummary> summaries = new List<AssetSummary>();
-            ListAssetSummariesResponse response = PlayFabMultiplayerAPI
+            ListAssetSummariesResponse response = Instance
                 .ListAssetSummariesAsync(new ListAssetSummariesRequest() {PageSize = DefaultPageSize}).Result.Result;
             summaries.AddRange(response.AssetSummaries ?? Enumerable.Empty<AssetSummary>());
             if (All)
             {
                 while (!string.IsNullOrEmpty(response.SkipToken))
                 {
-                    response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+                    response = CallPlayFabApi(() => Instance
                         .ListAssetSummariesAsync(new ListAssetSummariesRequest() {PageSize = DefaultPageSize, SkipToken = response.SkipToken}));
                     summaries.AddRange(response.AssetSummaries ?? Enumerable.Empty<AssetSummary>());
                 }

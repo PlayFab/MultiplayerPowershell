@@ -55,7 +55,7 @@
                 RegionConfigurations = RegionConfiguration
             };
 
-            CreateBuildWithManagedContainerResponse response = CallPlayFabApi(() => PlayFabMultiplayerAPI.CreateBuildWithManagedContainerAsync(buildRequest));
+            CreateBuildWithManagedContainerResponse response = CallPlayFabApi(() => Instance.CreateBuildWithManagedContainerAsync(buildRequest));
             WriteVerbose($"Created build {BuildName}");
             WriteObject(response);
         }

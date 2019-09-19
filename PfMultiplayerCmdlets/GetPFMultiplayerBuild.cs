@@ -72,20 +72,20 @@
 
         private GetBuildResponse GetBuildDetails(string buildId)
         {
-            return CallPlayFabApi(() => PlayFabMultiplayerAPI.GetBuildAsync(new GetBuildRequest() {BuildId = buildId}));
+            return CallPlayFabApi(() => Instance.GetBuildAsync(new GetBuildRequest() {BuildId = buildId}));
         }
 
-        internal static List<BuildSummary> GetBuildSummaries(bool all)
+        internal List<BuildSummary> GetBuildSummaries(bool all)
         {
             List<BuildSummary> summaries = new List<BuildSummary>();
-            ListBuildSummariesResponse response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+            ListBuildSummariesResponse response = CallPlayFabApi(() => Instance
                 .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize }));
             summaries.AddRange(response.BuildSummaries ?? Enumerable.Empty<BuildSummary>());
             if (all)
             {
                 while (!string.IsNullOrEmpty(response.SkipToken))
                 {
-                    response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+                    response = CallPlayFabApi(() => Instance
                         .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize, SkipToken = response.SkipToken }));
                     summaries.AddRange(response.BuildSummaries ?? Enumerable.Empty<BuildSummary>());
                 }
