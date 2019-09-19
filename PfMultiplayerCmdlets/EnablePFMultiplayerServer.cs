@@ -14,7 +14,7 @@
 
         protected override void ProcessRecord()
         {
-            PlayFabMultiplayerAPI.EnableMultiplayerServersForTitleAsync(new EnableMultiplayerServersForTitleRequest()).Wait();
+            Instance.EnableMultiplayerServersForTitleAsync(new EnableMultiplayerServersForTitleRequest()).Wait();
             TitleMultiplayerServerEnabledStatus status = GetStatus();
             Stopwatch stopwatch = Stopwatch.StartNew();
             while (status != TitleMultiplayerServerEnabledStatus.Enabled)
@@ -29,7 +29,7 @@
 
         private TitleMultiplayerServerEnabledStatus GetStatus()
         {
-            return CallPlayFabApi( () => PlayFabMultiplayerAPI.GetTitleEnabledForMultiplayerServersStatusAsync(new GetTitleEnabledForMultiplayerServersStatusRequest()))
+            return CallPlayFabApi( () => Instance.GetTitleEnabledForMultiplayerServersStatusAsync(new GetTitleEnabledForMultiplayerServersStatusRequest()))
                 .Status.Value;
         }
     }

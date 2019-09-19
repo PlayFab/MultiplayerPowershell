@@ -39,8 +39,8 @@
                 fieldInfo = typeof(PlayFabAuthenticationContext).GetField("EntityToken", BindingFlags.Instance | BindingFlags.Public);
                 fieldInfo.SetValue(context, null);
                 
-                PlayFabSettings.TitleId = TitleId;
-                PlayFabSettings.DeveloperSecretKey = _secretKey;
+                PlayFabSettings.staticSettings.TitleId = TitleId;
+                PlayFabSettings.staticSettings.DeveloperSecretKey = _secretKey;
 
                 // The SDK sets the entity token as part of response evaluation.
                 PlayFabAuthenticationAPI.GetEntityTokenAsync(request).Wait();
