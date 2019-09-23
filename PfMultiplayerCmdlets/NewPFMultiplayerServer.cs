@@ -1,11 +1,10 @@
 ﻿namespace PFMultiplayerCmdlets
 {
+    using PlayFab.MultiplayerModels;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Management.Automation;
-    using PlayFab;
-    using PlayFab.MultiplayerModels;
 
     [Cmdlet(VerbsCommon.New, "PFMultiplayerServer")]
     public class NewPFMultiplayerServer : PFBaseCmdlet
@@ -26,12 +25,12 @@
         [ValidateNotNullOrEmpty]
         public List<AzureRegion> PreferredRegions { get; set; }
 
-        internal static string GetBuildId(string buildName, Guid? buildId)
+        internal string GetBuildId(string buildName, Guid? buildId)
         {
             ValidateBuildArguments(buildName, buildId);
             if (!string.IsNullOrEmpty(buildName))
             {
-                List<BuildSummary> buildSummaries = GetPFMultiplayerBuild.GetBuildSummaries(all: true);
+                List<BuildSummary> buildSummaries = new GetPFMultiplayerBuild { ProductionEnvironmentUrl = ProductionEnvironmentUrl }.GetBuildSummaries(all: true);
                 buildSummaries = buildSummaries.Where(x => x.BuildName.IndexOf(buildName, StringComparison.OrdinalIgnoreCase) > -1).ToList();
 
                 if (buildSummaries.Count == 0)
@@ -56,7 +55,7 @@
         {
             string buildIdString = GetBuildId(BuildName, BuildId);
 
-            RequestMultiplayerServerResponse response = CallPlayFabApi(() =>PlayFabMultiplayerAPI.RequestMultiplayerServerAsync(new RequestMultiplayerServerRequest()
+            RequestMultiplayerServerResponse response = CallPlayFabApi(() => Instance.RequestMultiplayerServerAsync(new RequestMultiplayerServerRequest()
             {
                 BuildId = buildIdString,
                 PreferredRegions = PreferredRegions,

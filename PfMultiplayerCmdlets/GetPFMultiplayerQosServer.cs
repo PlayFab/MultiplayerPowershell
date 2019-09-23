@@ -7,11 +7,11 @@
 
     [Cmdlet(VerbsCommon.Get, "PFMultiplayerQosServer")]
     [OutputType(typeof(List<QosServer>))]
-    public class GetPFMultiplayerQosServer : Cmdlet
+    public class GetPFMultiplayerQosServer : PageableCmdlet
     {
         protected override void ProcessRecord()
         {
-            ListQosServersResponse response = PlayFabMultiplayerAPI.ListQosServersAsync(new ListQosServersRequest()).Result.Result;
+            ListQosServersResponse response = Instance.ListQosServersAsync(new ListQosServersRequest()).Result.Result;
             WriteObject(response.QosServers);
         }
     }

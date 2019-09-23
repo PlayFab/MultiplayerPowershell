@@ -35,7 +35,7 @@
                 throw new Exception($"File {FilePath} does not exist");
             }
 
-            GetAssetUploadUrlResponse response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+            GetAssetUploadUrlResponse response = CallPlayFabApi(() => Instance
                 .GetAssetUploadUrlAsync(new GetAssetUploadUrlRequest {FileName = AssetName ?? Path.GetFileName(FilePath)}));
 
             WriteVerbose($"SasToken retrieved {response.AssetUploadUrl}, uploading file.");

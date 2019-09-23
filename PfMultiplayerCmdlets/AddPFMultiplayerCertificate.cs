@@ -28,7 +28,7 @@
             var certBytes = File.ReadAllBytes(FilePath);
             var certBase64 = Convert.ToBase64String(certBytes);
 
-            CallPlayFabApi(() => PlayFabMultiplayerAPI
+            CallPlayFabApi(() => Instance
                 .UploadCertificateAsync(new UploadCertificateRequest
                 {
                     GameCertificate = new Certificate {Base64EncodedValue = certBase64, Name = Name, Password = Password}

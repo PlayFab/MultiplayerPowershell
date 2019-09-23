@@ -13,14 +13,14 @@
         protected override void ProcessRecord()
         {
             List<CertificateSummary> summaries = new List<CertificateSummary>();
-            ListCertificateSummariesResponse response = CallPlayFabApi(() => PlayFabMultiplayerAPI
+            ListCertificateSummariesResponse response = CallPlayFabApi(() => Instance
                 .ListCertificateSummariesAsync(new ListCertificateSummariesRequest() { PageSize = DefaultPageSize }));
             summaries.AddRange(response.CertificateSummaries ?? Enumerable.Empty<CertificateSummary>());
             if (All)
             {
                 while (!string.IsNullOrEmpty(response.SkipToken))
                 {
-                    response = CallPlayFabApi(() =>PlayFabMultiplayerAPI
+                    response = CallPlayFabApi(() => Instance
                         .ListCertificateSummariesAsync(new ListCertificateSummariesRequest() { PageSize = DefaultPageSize, SkipToken = response.SkipToken }));
                     summaries.AddRange(response.CertificateSummaries ?? Enumerable.Empty<CertificateSummary>());
                 }
