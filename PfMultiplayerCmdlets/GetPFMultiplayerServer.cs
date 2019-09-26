@@ -35,7 +35,7 @@
                 throw new ArgumentException("Exactly one of Regions, AllRegions should be specified.");
             }
 
-            string buildIdString = new NewPFMultiplayerServer { ProductionEnvironmentUrl = ProductionEnvironmentUrl }.GetBuildId(BuildName, BuildId);
+            string buildIdString = GetBuildId(BuildName, BuildId);
 
             HashSet<AzureRegion> regionsList = new HashSet<AzureRegion>();
             if (AllRegions)
@@ -80,6 +80,64 @@
             }
 
             return summaries;
+        }
+
+        internal string GetBuildId(string buildName, Guid? buildId)
+        {
+            ValidateBuildArguments(buildName, buildId);
+            if (!string.IsNullOrEmpty(buildName))
+            {
+                List<BuildSummary> buildSummaries = GetBuildSummaries(all: true);
+                buildSummaries = buildSummaries.Where(x => x.BuildName.IndexOf(buildName, StringComparison.OrdinalIgnoreCase) > -1).ToList();
+
+                if (buildSummaries.Count == 0)
+                {
+                    throw new Exception($"Build {buildName} not found.");
+                }
+
+                if (buildSummaries.Count > 1)
+                {
+                    throw new Exception($"More than one build matched {buildName}.");
+                }
+
+                return buildSummaries[0].BuildId;
+            }
+            else
+            {
+                return buildId.Value.ToString();
+            }
+        }
+
+        internal List<BuildSummary> GetBuildSummaries(bool all)
+        {
+            List<BuildSummary> summaries = new List<BuildSummary>();
+            ListBuildSummariesResponse response = CallPlayFabApi(() => Instance
+                .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize }));
+            summaries.AddRange(response.BuildSummaries ?? Enumerable.Empty<BuildSummary>());
+            if (all)
+            {
+                while (!string.IsNullOrEmpty(response.SkipToken))
+                {
+                    response = CallPlayFabApi(() => Instance
+                        .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize, SkipToken = response.SkipToken }));
+                    summaries.AddRange(response.BuildSummaries ?? Enumerable.Empty<BuildSummary>());
+                }
+            }
+
+            return summaries;
+        }
+
+        internal static void ValidateBuildArguments(string buildName, Guid? buildId)
+        {
+            if (!string.IsNullOrEmpty(buildName) && buildId.HasValue)
+            {
+                throw new ArgumentException("Exactly one of BuildName, BuildId should be specified.");
+            }
+
+            if (string.IsNullOrEmpty(buildName) && !buildId.HasValue)
+            {
+                throw new ArgumentException("Exactly one of BuildName, BuildId should be specified.");
+            }
         }
     }
 }
