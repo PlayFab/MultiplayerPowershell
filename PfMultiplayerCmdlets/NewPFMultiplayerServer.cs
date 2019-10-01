@@ -9,6 +9,8 @@
     [Cmdlet(VerbsCommon.New, "PFMultiplayerServer")]
     public class NewPFMultiplayerServer : PFBaseCmdlet
     {
+        protected const int DefaultPageSize = 10;
+
         [Parameter]
         public string BuildName { get; set; }
 
@@ -30,7 +32,7 @@
             ValidateBuildArguments(buildName, buildId);
             if (!string.IsNullOrEmpty(buildName))
             {
-                List<BuildSummary> buildSummaries = new GetPFMultiplayerBuild { ProductionEnvironmentUrl = ProductionEnvironmentUrl }.GetBuildSummaries(all: true);
+                List<BuildSummary> buildSummaries = GetBuildSummaries(all: true);
                 buildSummaries = buildSummaries.Where(x => x.BuildName.IndexOf(buildName, StringComparison.OrdinalIgnoreCase) > -1).ToList();
 
                 if (buildSummaries.Count == 0)
@@ -49,6 +51,25 @@
             {
                 return buildId.Value.ToString();
             }
+        }
+
+        internal List<BuildSummary> GetBuildSummaries(bool all)
+        {
+            List<BuildSummary> summaries = new List<BuildSummary>();
+            ListBuildSummariesResponse response = CallPlayFabApi(() => Instance
+                .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize }));
+            summaries.AddRange(response.BuildSummaries ?? Enumerable.Empty<BuildSummary>());
+            if (all)
+            {
+                while (!string.IsNullOrEmpty(response.SkipToken))
+                {
+                    response = CallPlayFabApi(() => Instance
+                        .ListBuildSummariesAsync(new ListBuildSummariesRequest() { PageSize = DefaultPageSize, SkipToken = response.SkipToken }));
+                    summaries.AddRange(response.BuildSummaries ?? Enumerable.Empty<BuildSummary>());
+                }
+            }
+
+            return summaries;
         }
 
         protected override void ProcessRecord()
