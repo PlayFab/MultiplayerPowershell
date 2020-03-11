@@ -79,7 +79,7 @@
             RequestMultiplayerServerResponse response = CallPlayFabApi(() => Instance.RequestMultiplayerServerAsync(new RequestMultiplayerServerRequest()
             {
                 BuildId = buildIdString,
-                PreferredRegions = PreferredRegions,
+                PreferredRegions = PreferredRegions.Select(x => x.ToString()).ToList(),
                 SessionCookie = SessionCookie,
                 SessionId = SessionId.ToString()
             }));
