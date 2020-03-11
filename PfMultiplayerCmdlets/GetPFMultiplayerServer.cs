@@ -41,7 +41,7 @@
             if (AllRegions)
             {
                 GetBuildResponse response = Instance.GetBuildAsync(new GetBuildRequest() { BuildId = buildIdString }).Result.Result;
-                response.RegionConfigurations.ForEach(x => regionsList.Add(x.Region.Value));
+                response.RegionConfigurations.ForEach(x => regionsList.Add((AzureRegion)Enum.Parse(typeof(AzureRegion), x.Region, true)));
             }
             else
             {
@@ -61,7 +61,7 @@
         {
             List<MultiplayerServerSummary> summaries = new List<MultiplayerServerSummary>();
             ListMultiplayerServersResponse response = CallPlayFabApi(() => Instance
-                .ListMultiplayerServersAsync(new ListMultiplayerServersRequest() { PageSize = DefaultPageSize, Region = region, BuildId = buildId }));
+                .ListMultiplayerServersAsync(new ListMultiplayerServersRequest() { PageSize = DefaultPageSize, Region = region.ToString(), BuildId = buildId }));
             summaries.AddRange(response.MultiplayerServerSummaries ?? Enumerable.Empty<MultiplayerServerSummary>());
             if (All)
             {
@@ -73,7 +73,7 @@
                             BuildId = buildId,
                             PageSize = DefaultPageSize,
                             SkipToken = response.SkipToken,
-                            Region = region
+                            Region = region.ToString()
                         }));
                     summaries.AddRange(response.MultiplayerServerSummaries ?? Enumerable.Empty<MultiplayerServerSummary>());
                 }
