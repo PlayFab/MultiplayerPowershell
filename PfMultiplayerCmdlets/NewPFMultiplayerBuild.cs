@@ -12,6 +12,9 @@
         [Parameter(Mandatory = true)]
         public string BuildName { get; set; }
 
+        [Parameter]
+        public ContainerFlavor ContainerFlavor { get; set; } = ContainerFlavor.ManagedWindowsServerCore;
+
         [Parameter(Mandatory = true)]
         public string StartMultiplayerServerCommand { get; set; }
 
@@ -44,7 +47,7 @@
             CreateBuildWithManagedContainerRequest buildRequest = new CreateBuildWithManagedContainerRequest()
             {
                 BuildName = BuildName,
-                ContainerFlavor = ContainerFlavor.ManagedWindowsServerCore,
+                ContainerFlavor = ContainerFlavor,
                 GameAssetReferences = AssetReferences,
                 GameCertificateReferences = CertificateReferences,
                 Metadata = Metadata,
