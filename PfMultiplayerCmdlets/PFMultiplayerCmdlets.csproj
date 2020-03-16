@@ -46,6 +46,8 @@
     <Compile Include="GetPFMultiplayerAsset.cs" />
     <Compile Include="GetPFMultiplayerBuild.cs" />
     <Compile Include="GetPFMultiplayerCertificate.cs" />
+    <Compile Include="GetPFMultiplayerContainerImages.cs" />
+    <Compile Include="GetPFMultiplayerImageTags.cs" />
     <Compile Include="GetPFMultiplayerQosServer.cs" />
     <Compile Include="GetPFMultiplayerServer.cs" />
     <Compile Include="GetPFTitleEntityToken.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="RemovePFMultiplayerAsset.cs" />
     <Compile Include="RemovePFMultiplayerBuild.cs" />
     <Compile Include="RemovePFMultiplayerCertificate.cs" />
+    <Compile Include="RemovePFMultiplayerContainerImageTag.cs" />
     <Compile Include="SetPFTitle.cs" />
   </ItemGroup>
   <ItemGroup>
