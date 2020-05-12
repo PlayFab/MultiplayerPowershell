@@ -43,14 +43,7 @@
 
         protected static T CallPlayFabApi<T>(Func<Task<PlayFabResult<T>>> apiCall) where T : PlayFabResultCommon
         {
-            try
-            {
-                PFTokenUtility.Instance.GetPFTitleEntityToken();
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.ToString());
-            }
+            PFTokenUtility.Instance.GetPFTitleEntityToken();
 
             PlayFabResult<T> result = apiCall().Result;
             if (result.Error != null)
