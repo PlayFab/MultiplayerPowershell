@@ -3,6 +3,7 @@
     using System;
     using System.Reflection;
     using System.Threading.Tasks;
+    using Newtonsoft.Json;
     using PlayFab;
     using PlayFab.AuthenticationModels;
     using BindingFlags = System.Reflection.BindingFlags;
@@ -43,19 +44,22 @@
                 PlayFabSettings.staticSettings.DeveloperSecretKey = _secretKey;
 
                 // The SDK sets the entity token as part of response evaluation.
-                PlayFabAuthenticationAPI.GetEntityTokenAsync(request).Wait();
+                PlayFabResult<GetEntityTokenResponse> response = PlayFabAuthenticationAPI.GetEntityTokenAsync(request).Result;
+                if (response.Error != null)
+                {
+                    throw new Exception($"Error occurred while calling the api. {JsonConvert.SerializeObject(response.Error)}.");
+                }
+
                 _tokenRefreshTime = DateTime.UtcNow.AddHours(TokenRefreshIntervalInHours);
             }
         }
 
         public void SetTitleSecretKey(string titleId, string secret)
         {
-            if (!string.Equals(TitleId, titleId, StringComparison.OrdinalIgnoreCase))
-            {
-                TitleId = titleId;
-                _secretKey = secret;
-                _tokenRefreshTime = DateTime.MinValue;
-            }
+            TitleId = titleId;
+            _secretKey = secret;
+            _tokenRefreshTime = DateTime.MinValue;
+            
         }
     }
 }
