@@ -1,5 +1,7 @@
 # PlayFab Multiplayer Powershell
 
+** This repo is archived, please use the new [PlayFab Multiplayer Servers Powershell modules](https://github.com/PlayFab/MpsPowershell) => https://github.com/PlayFab/MpsPowershell **
+
 ## Overview
 
 PlayFab Multiplayer Powershell cmdlets useful for creating and managing PlayFab Multiplayer Server builds.
